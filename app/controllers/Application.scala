@@ -20,7 +20,7 @@ object Application extends Controller {
     import models.Words._
 
     Async {
-      Words.findWords("ordinateur" :: "carte" :: "avion" :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: Nil, lang).map { words =>
+      Words.findWords("ordinateur" :: "carte" :: "avion" :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil, lang).map { words =>
         Ok(Json.toJson(words))
       }
     }
