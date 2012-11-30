@@ -3,6 +3,8 @@ package models
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.libs.ws.WS
+import utils._
+import scala.concurrent.Future
 
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -10,14 +12,32 @@ object Words {
 
   implicit val wordsFormat = Json.format[Word]
 
-  val wordnikApi = "a2e27ac86edd2ca27400c043ef70491740229dd554e0e6dc6"
 
-  def randomWords(count: Int = 10) = {
-    WS.url(s"http://api.wordnik.com/v4/words.json/randomWords?limit=$count&minCorpusCount=100")
-      .withHeaders("api_key" -> wordnikApi)
-      .get.map { resp =>
-        Json.parse(resp.body) \\ "word"
+  def findWords(words: List[String], lang: String = "fr") : Future[List[Word]] = {
+    val all = words.map { wordStr =>
+        //println(wordStr)
+        val rdy : List[Future[String]] = List(
+
+          GoogleTranslator.find(lang, wordStr).flatMap { trad =>
+            //println("trad : "+((trad \ "data" \ "translations").as[JsArray].apply(0) \ "translatedText").as[String])
+            GoogleTranslator.find(lang, trad)
+          },
+
+          Wikipedia.find("en", wordStr).flatMap { article =>
+            println(article \ "title")
+            Wikipedia.findImage("en", (article \ "title").as[String]).map(_.as[String])
+          },
+
+          GoogleTranslator.find(lang, wordStr).map {
+            GoogleTranslator.textToSpeech(lang, _)
+          }
+          )
+
+        Future.sequence(rdy).map { res =>
+          Word(wordStr, res(0), res(1), res(2))
+        }
       }
+      Future.sequence(all)
   }
 
   def defaultWords =
@@ -29,6 +49,6 @@ object Words {
     Nil
 }
 
-case class Word(word: String, trad: String, url: String)
+case class Word(word: String, trad: String, url: String, speech: String = "")
 
 

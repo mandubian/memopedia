@@ -16,9 +16,14 @@ object Application extends Controller {
   }
 
   def randomWords(count: Int = 10) = Action { implicit request =>
+
     import models.Words._
-    Words.randomWords(10)
-    Ok(Json.toJson(Words.defaultWords))
+
+    Async {
+      Words.findWords("computer" :: "hair" :: Nil, "fr").map { words =>
+        Ok(Json.toJson(words))
+      }
+    }
   }
 
   def translate(lang: String, word: String) = Action {
@@ -27,11 +32,11 @@ object Application extends Controller {
         Ok(json)
       }
     }
-  }  
+  }
 
   def tts(lang: String, word: String) = Action {
     Ok(GoogleTranslator.textToSpeech(lang, word))
-  }  
+  }
 
   def searchWikipediaPage(lang: String, word: String) = Action {
     Async {
@@ -39,7 +44,7 @@ object Application extends Controller {
         Ok(json)
       }
     }
-  }  
+  }
 
   def searchWikipediaImages(lang: String, title: String) = Action {
     Async {
@@ -47,7 +52,7 @@ object Application extends Controller {
         Ok(json)
       }
     }
-  }  
+  }
 
   def searchWiktionaryPage(lang: String, title: String) = Action {
     Async {
@@ -55,5 +60,5 @@ object Application extends Controller {
         Ok(json)
       }
     }
-  }  
+  }
 }
