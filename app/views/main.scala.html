@@ -13,34 +13,6 @@
     <script src="@routes.Assets.at("javascripts/backbone.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/mustache.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/memopedia.js")" type="text/javascript"></script>
-    <script type="text/javascript" charset="utf-8">
-      $(function(){
-        // TODO: valerian va bosser
-        var template = function(id, data){
-          var template = $(id)
-          var str = template.text()
-          return Mustache.to_html(str, data)
-        }
-
-        var card = template('#card', {word: 'hello', trad: 'toto', img: {url: 'http://4.bp.blogspot.com/-RyF6qje3RFE/T1ux5UdiENI/AAAAAAAAAkI/uFCHTdqlzA0/s1600/learn-all-the-things.jpg'}, def: 'un mot', sound: 'paf'});
-        var cardQuestion4 = template('#card-question4', {word:'hello', words:['toto', 'introduction', 'materiel', 'variés']});
-
-        var i =0;
-        var cards=[card, cardQuestion4];
-        $(document).on('clickkkkkk', 'nav', function() {
-            $('#content').append($(cards[i%cards.length]).hide());
-            i++;
-            var $sections = $('#content section');
-            $sections.first().fadeOut(function () {
-                $sections.next().fadeIn(function () {
-                    $sections.first().remove();
-                });
-            });
-            return false;
-        });
-
-      })
-    </script>
 
       <script type="templ/html" charset="utf-8" id="card">
           <div class="view card">
