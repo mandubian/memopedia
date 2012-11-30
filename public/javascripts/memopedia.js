@@ -31,7 +31,7 @@ $(function () {
 
         // Re-render the titles of the todo item.
         render:function () {
-            var card = template('#card', {word:'hello', trad:'toto', img:{url:'http://4.bp.blogspot.com/-RyF6qje3RFE/T1ux5UdiENI/AAAAAAAAAkI/uFCHTdqlzA0/s1600/learn-all-the-things.jpg'}, def:'un mot', sound:'paf'});
+            var card = template('#card', this.model);
             this.$el.html(card);
             return this;
         },
@@ -68,7 +68,8 @@ $(function () {
         initialize:function () {
             console.log("init")
             var next = _.bind(this.next, this);
-            var cardView = new CardView({next:next});
+            var cardView = new CardView({next:next, model:this.model[0]});
+            this.modelIndex = 1;
             this.currentView = cardView;
             this.$el.append(cardView.render().$el);
         },
@@ -82,7 +83,8 @@ $(function () {
         next:function () {
             var self = this;
             var next = _.bind(this.next, this);
-            var cardView = new CardView({next:next});
+            var cardView = new CardView({next:next, model: this.model[this.modelIndex % this.model.length]});
+            this.modelIndex++;
             this.$el.append(cardView.render().$el.hide());
             this.currentView.$el.fadeOut(function () {
                 cardView.$el.fadeIn(function () {
@@ -94,7 +96,12 @@ $(function () {
 
     });
 
-    // Finally, we kick things off by creating the **App**.
-    var App = new AppView;
+    $.ajax({
+        url:'/randomWords'
+    }).done(function (data) {
+                console.log(data);
+            var App = new AppView({model: data});
+        });
+
 
 });
