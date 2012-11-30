@@ -38,16 +38,12 @@ object Wikipedia {
       s"""http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=${URLEncoder.encode(title, "UTF-8")}&prop=images"""
     ).get().flatMap{ resp =>
       val obj = (resp.json \ "query" \ "pages").as[JsObject]
-      println(title)
       val img = URLEncoder.encode((obj.fields(0)._2.as[JsObject] \ "images" \\ "title")(0).as[String], "UTF-8")
-      println(img)
       WS.url(
         s"http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=$img&prop=imageinfo&iiprop=url"
         ).get().map { resp =>
           val obj = (resp.json \ "query" \ "pages").as[JsObject]
-          val link = (obj.fields(0)._2 \ "imageinfo" \\ "url").last
-          //println(link)
-          link
+          (obj.fields(0)._2 \ "imageinfo" \\ "url").last
         }
     }
   }

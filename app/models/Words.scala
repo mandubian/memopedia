@@ -18,10 +18,9 @@ object Words {
         //println(wordStr)
         val rdy : List[Future[String]] = List(
 
-          GoogleTranslator.find(lang, wordStr).flatMap { trad =>
-            //println("trad : "+((trad \ "data" \ "translations").as[JsArray].apply(0) \ "translatedText").as[String])
-            GoogleTranslator.find(lang, trad)
-          },
+
+          GoogleTranslator.find(lang, wordStr)
+          ,
 
           Wikipedia.find("fr", wordStr).flatMap { article =>
             println(article \ "title")
