@@ -1,0 +1,99 @@
+@import url(http://fonts.googleapis.com/css?family=Dosis:400,500,600,700);
+
+*{
+  color: #202020;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: serif;
+  font-size: 14px;
+}
+
+body {
+  background: url('/assets/images/cardboard_flat.png') repeat;
+  padding-bottom: 50px;
+}
+
+h1, h2{
+  font-size: 5em;
+  text-align: center;
+  font-weight: normal;
+  margin: 0;
+  padding: 20px;
+}
+
+h1{
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  background: -webkit-linear-gradient(bottom, rgba(0,0,0,0.8) 0%,rgba(0,0,0,0) 90%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+}
+
+#content {
+  width: 700px;
+  margin: auto;
+  position: relative;
+}
+
+header {
+  padding: 25px;
+  display: block;
+  height: 170px;
+  background: url('/assets/images/navy_blue.png') repeat;
+}
+
+header img{
+  display: block;
+}
+
+section {
+  padding: 0;
+  margin-top: 60px;
+  background: #F2F2F2;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+  border: solid 15px white;
+  border-radius: 7px;
+  display: block;
+}
+
+.desc {
+  -webkit-transform: translateY(-120px);
+  margin-bottom: -120px;
+}
+
+.card {
+  border: solid 1px red;
+}
+
+article img {
+  display: block;
+  width: 671px;
+  margin: 0;
+}
+
+p {
+  font-family: 'Dosis';
+  font-size: 2em;
+  text-align: center;
+  padding: 10px;
+  margin: 20px;
+  color: #272727;
+}
+
+nav {
+  display: block;
+  position: absolute;
+  left: 780px;
+  top: 230px;
+}
+nav a {
+  display: block;
+  font-size: 4em;
+  color: white;
+  width: 100px;
+  height: 100px;
+  background: #000;
+  opacity: 0.35;
+  border-radius: 50px;
+  text-align: center;
+  padding: 10px;
+}

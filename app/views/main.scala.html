@@ -6,6 +6,7 @@
   <head>
     <title>@title</title>
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/normalize.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
     <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/underscore.js")" type="text/javascript"></script>
@@ -36,9 +37,6 @@
 
       <script type="templ/html" charset="utf-8" id="card">
           <section>
-              <nav>
-                  <a href="#">☞</a>
-              </nav>
               <article>
                   <p>
                   <dl>
@@ -54,40 +52,13 @@
               </article>
           </section>
       </script>
-    <style type="text/css" media="screen">
-
-      *{
-        color: #7F7F7F;
-        text-decoration: none;
-      }
-
-      #content {
-        width: 700px;
-        margin: auto;
-      }
-
-      article {
-        width: 600px;
-      }
-
-      article img {
-        display: block;
-      }
-
-      nav {
-        float: right;
-        width: 100px;
-        border: solid 1px red;
-        margin-top: 200px;
-      }
-      nav a {
-        font-size: 4em;
-      }
-    </style>
   </head>
   <body>
+    <header>
+      <a href="/"><img src="/assets/images/lougou-choulou.png" lat="" /></a>
+    </header>
     <div id="content">
-      @content
+    @content
     </div>
   </body>
 </html>
