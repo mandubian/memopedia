@@ -25,9 +25,9 @@
                            alt="{{word}}"/>
 
                       <div class="desc">
-                          <h1>{{trad}}</h1>
-
                           <h2>{{word}}</h2>
+
+                          <h1>{{trad}}</h1>
                       </div>
                   </article>
               </section>
@@ -35,17 +35,23 @@
               <video controls="" autoplay="" name="media"><source src="{{speech}}" type="audio/mpeg"></video>
           </div>
       </script>
-      <script type="templ/html" charset="utf-8" id="card-question4">
-          <section>
-              <article>
-                  <h3>{{word}}</h3>
-                  <ul>
-                      {{#words}}
-                      <li>{{.}}</li>
-                      {{/words}}
-                  </ul>
-              </article>
-          </section>
+      <script type="templ/html" charset="utf-8" id="question">
+          <div class="view card">
+              <section>
+                  <article>
+                      <img src="{{url}}"
+                           alt="{{word}}"/>
+
+                      <div class="desc">
+                          <h2>{{word}}</h2>
+
+                          <input type=text>
+                      </div>
+                  </article>
+              </section>
+              <p>{{word}}, c'est bien</p>
+              <video controls="" autoplay="" name="media"><source src="{{speech}}" type="audio/mpeg"></video>
+          </div>
       </script>
   </head>
   <body>

@@ -36,9 +36,49 @@ $(function () {
             return this;
         },
 
+        nextEvent:function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(e);
+            console.log("nextEvent")
+            this.options.next();
+        }
+
+    });
+
+    var Question = Backbone.View.extend({
+
+        //... is a list tag.
+        //tagName:"section",
+
+        // Cache the template function for a single item.
+        //template: _.template($('#item-template').html()),
+
+        // The DOM events specific to an item.
+        events:{
+            "input input":"checkAnswer"
+        },
+
+        initialize:function () {
+            console.log("CardView init")
+            setTimeout(this.nextEvent, 1000 * 30);
+        },
+
+        // Re-render the titles of the todo item.
+        render:function () {
+            var card = template('#question', this.model);
+            this.$el.html(card);
+            return this;
+        },
+
+        checkAnswer: function(){
+            this.$el.find('input').val()
+        },
+
         nextEvent:function () {
             console.log("nextEvent")
             this.options.next();
+
         }
 
     });
@@ -83,7 +123,14 @@ $(function () {
         next:function () {
             var self = this;
             var next = _.bind(this.next, this);
-            var cardView = new CardView({next:next, model: this.model[this.modelIndex % this.model.length]});
+            var card = this.model[this.modelIndex % this.model.length];
+            var cardView;
+            if (card.point < 5) {
+                cardView = new CardView({next:next, model:card});
+                card.point += 5;
+            } else {
+                cardView = new Question({next:next, model:card});
+            }
             this.modelIndex++;
             this.$el.append(cardView.render().$el.hide());
             this.currentView.$el.fadeOut(function () {
@@ -99,8 +146,8 @@ $(function () {
     $.ajax({
         url:'/randomWords?lang='+lang
     }).done(function (data) {
-                console.log(data);
-            var App = new AppView({model: data});
+            console.log(data);
+            var App = new AppView({model:data});
         });
 
 
