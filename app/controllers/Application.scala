@@ -17,7 +17,7 @@ object Application extends Controller {
 
   def randomWords(count: Int = 10) = Action { implicit request =>
     import models.Words._
-
+    Words.randomWords(10)
     Ok(Json.toJson(Words.defaultWords))
   }
 
