@@ -5,5 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 
+GET     /randomWords                controllers.Application.randomWords(count: Int ?= 5)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
