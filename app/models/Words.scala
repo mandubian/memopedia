@@ -23,9 +23,9 @@ object Words {
             GoogleTranslator.find(lang, trad)
           },
 
-          Wikipedia.find("en", wordStr).flatMap { article =>
+          Wikipedia.find("fr", wordStr).flatMap { article =>
             println(article \ "title")
-            Wikipedia.findImage("en", (article \ "title").as[String]).map(_.as[String])
+            Wikipedia.findImage("fr", (article \ "title").as[String]).map(_.as[String])
           },
 
           GoogleTranslator.find(lang, wordStr).map {

@@ -15,12 +15,12 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  def randomWords(count: Int = 10) = Action { implicit request =>
+  def randomWords(lang: String = "en") = Action { implicit request =>
 
     import models.Words._
 
     Async {
-      Words.findWords("computer" :: "hair" :: Nil, "fr").map { words =>
+      Words.findWords("ordinateur" :: "cheuveux" :: Nil, lang).map { words =>
         Ok(Json.toJson(words))
       }
     }

@@ -10,7 +10,7 @@ GET     /wikipedia/:lang/:word              controllers.Application.searchWikipe
 GET     /wikipedia/:lang/:title/images      controllers.Application.searchWikipediaImages(lang: String, title: String)
 GET     /wiktionary/:lang/:word             controllers.Application.searchWiktionaryPage(lang: String, word: String)
 
-GET     /randomWords                controllers.Application.randomWords(count: Int ?= 5)
+GET     /randomWords                controllers.Application.randomWords(lang: String ?= "en")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
