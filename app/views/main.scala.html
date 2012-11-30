@@ -19,28 +19,41 @@
           return Mustache.to_html(str, data)
         }
 
-        console.log(template('#card', {word: 'hello', trad: 'toto', img: {url: '#'}, def: 'un mot', sound: 'paf'}))
+        var card = template('#card', {word: 'hello', trad: 'toto', img: {url: 'http://4.bp.blogspot.com/-RyF6qje3RFE/T1ux5UdiENI/AAAAAAAAAkI/uFCHTdqlzA0/s1600/learn-all-the-things.jpg'}, def: 'un mot', sound: 'paf'});
+        $(document).on('click', 'nav', function() {
+            $('#content').append($(card).hide());
+            var $sections = $('#content section');
+            $sections.first().fadeOut(function () {
+                $sections.next().fadeIn(function () {
+                    $sections.first().remove();
+                });
+            });
+            return false;
+        });
+
       })
     </script>
 
-    <script type="templ/html" charset="utf-8" id="card">
-      <nav>
-        <a href="#">☞</a>
-      </nav>
-      <article>
-        <p>
-          <dl>
-            <dt>{{word}}</dt>
-            <dd>{{trad}}</dd>
-            {{#img}}
-              <dd><img src="{{url}}" alt="le mot" /></dd>
-            {{/img}}
-            <dd>{{def}}</dd>
-            <dd>{{sound}}</dd>
-          </dl>
-        </p>
-      </article>
-    </script>
+      <script type="templ/html" charset="utf-8" id="card">
+          <section>
+              <nav>
+                  <a href="#">☞</a>
+              </nav>
+              <article>
+                  <p>
+                  <dl>
+                      <dt>{{word}}</dt>
+                      <dd>{{trad}}</dd>
+                      {{#img}}
+                      <dd><img src="{{url}}" alt="le mot"/></dd>
+                      {{/img}}
+                      <dd>{{def}}</dd>
+                      <dd>{{sound}}</dd>
+                  </dl>
+                  </p>
+              </article>
+          </section>
+      </script>
     <style type="text/css" media="screen">
 
       *{
