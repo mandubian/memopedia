@@ -97,7 +97,7 @@ $(function () {
     });
 
     $.ajax({
-        url:'/randomWords'
+        url:'/randomWords?lang='+lang
     }).done(function (data) {
                 console.log(data);
             var App = new AppView({model: data});
