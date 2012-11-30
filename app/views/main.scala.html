@@ -13,8 +13,16 @@
     <script type="text/javascript" charset="utf-8">
       $(function(){
         // TODO: valerian va bosser
+        var template = function(id, data){
+          var template = $(id)
+          var str = template.text()
+          return Mustache.to_html(str, data)
+        }
+
+        console.log(template('#card', {word: 'hello', trad: 'toto', img: {url: '#'}, def: 'un mot', sound: 'paf'}))
       })
     </script>
+
     <script type="templ/html" charset="utf-8" id="card">
       <nav>
         <a href="#">☞</a>
@@ -24,9 +32,9 @@
           <dl>
             <dt>{{word}}</dt>
             <dd>{{trad}}</dd>
-            {{img}}
+            {{#img}}
               <dd><img src="{{url}}" alt="le mot" /></dd>
-            {{img}}
+            {{/img}}
             <dd>{{def}}</dd>
             <dd>{{sound}}</dd>
           </dl>
