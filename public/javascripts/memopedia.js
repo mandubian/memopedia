@@ -125,11 +125,11 @@ $(function () {
             var next = _.bind(this.next, this);
             var card = this.model[this.modelIndex % this.model.length];
             var cardView;
-            if (card.point < 5) {
-                cardView = new CardView({next:next, model:card});
-                card.point += 5;
-            } else {
+            if (card.point > 5) {
                 cardView = new Question({next:next, model:card});
+            } else {
+                card.point += 5;
+                cardView = new CardView({next:next, model:card});
             }
             this.modelIndex++;
             this.$el.append(cardView.render().$el.hide());
