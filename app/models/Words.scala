@@ -23,7 +23,6 @@ object Words {
           ,
 
           Wikipedia.find("fr", wordStr).flatMap { article =>
-            println(article \ "title")
             Wikipedia.findImage("fr", (article \ "title").as[String]).map(_.as[String])
           },
 
