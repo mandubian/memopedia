@@ -28,22 +28,19 @@ object Implicits {
   implicit val timeout = Timeout(1 second)
 }
 
-// requestId, score, channel
 case class Room(player1: (Long, Concurrent.Channel[JsValue]), player2: (Long, Concurrent.Channel[JsValue]), var scores: (Int, Int), var word: Option[Word] = None) {
   import Formats._
   private var current: Option[Word] = None
 
   def push(js: JsValue) = for(ch <- Seq(player1._2, player2._2)) ch.push(js)
   def checkAnswer(requestId: Long, ans: String) = {
+    println("Checking answer: " + ans)
     if(ans == word.get.trad) {
       if(requestId == player1._1) scores = (scores._1 + 1, scores._2)
       if(requestId == player2._1) scores = (scores._1, scores._2 + 1)
     }
     push(Json.toJson(this))
   }
-
-  //def word_=(w: Word) = current = Some(w)
-  //def word = current.get
 }
 object Room {
   def apply(p1: (Long, Concurrent.Channel[JsValue]), p2: (Long, Concurrent.Channel[JsValue])) = new Room(p1, p2, (0,0))
@@ -61,10 +58,7 @@ object Formats {
         (__ \ "id").write[Long] ~ (__ \ "score").write[Int] tupled
     )){ room: Room => (room.player1._1 -> room.scores._1, room.player2._1 -> room.scores._2)}
 
-
-    //case class Word(word: String, trad: String, url: String, speech: String = "")
-
-    implicit val wordWrite: Writes[Word] = (
+  implicit val wordWrite: Writes[Word] = (
       (__ \ "word").write[String] ~ (__ \ "url").write[String]
     ){ word => word.word -> word.url }
 
@@ -76,7 +70,7 @@ class Events extends Actor {
   import Events._
 
   var pending: Option[(Long, Concurrent.Channel[JsValue])] = None
-  var rooms: Seq[Room] = Nil
+  val rooms = new scala.collection.mutable.ArrayBuffer[Room]
 
   def newWord = {
     val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
@@ -96,6 +90,8 @@ class Events extends Actor {
            pending = None
            val room = Room((id, channel), (requestid, c))
 
+           rooms += room
+
            play.Logger.info(s"Starting room $room")
            room.push(Json.obj("start" -> room))
 
@@ -107,11 +103,16 @@ class Events extends Actor {
       sender ! Connected(e)
     }
 
-    case Answer(requestid, ans) => rooms
-      .find{ r =>
-        r.player1._1 == requestid || r.player2._1 == requestid
-      }
-      .map(_.checkAnswer(requestid, ans))
+    case Answer(requestid, ans) => {
+      println("ROOMS: " + rooms)
+      rooms
+        .find{ r =>
+          println(requestid)
+          println(r)
+          r.player1._1 == requestid || r.player2._1 == requestid
+        }
+        .map(_.checkAnswer(requestid, ans))
+    }
 
     case Quit(requestid) => {
       //TODO

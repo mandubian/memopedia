@@ -22,12 +22,14 @@ object Com extends Controller {
   import actors.Actors._
   import actors.Implicits._
 
+  import actors.Formats._
+
   def event = WebSocket.async[JsValue] { request  =>
     (notifier ? Join(request.id)).map {
       case Connected(enumerator) =>
-        val iteratee = Iteratee.foreach[JsValue] { event =>
-          println(event)
-          // TODO: parse message and send to actor
+        val iteratee = Iteratee.foreach[JsValue]{ js =>
+          play.Logger.info("received: " + js.toString)
+          notifier ! Answer(request.id, (js \ "word").as[String])
         }.mapDone { _ =>
           notifier ! Quit(request.id)
         }
