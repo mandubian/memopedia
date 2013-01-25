@@ -33,13 +33,43 @@ case class Room(player1: (Long, Concurrent.Channel[JsValue]), player2: (Long, Co
   private var current: Option[Word] = None
 
   def push(js: JsValue) = for(ch <- Seq(player1._2, player2._2)) ch.push(js)
-  def checkAnswer(requestId: Long, ans: String) = {
-    println("Checking answer: " + ans)
-    if(ans == word.get.trad) {
-      if(requestId == player1._1) scores = (scores._1 + 1, scores._2)
-      if(requestId == player2._1) scores = (scores._1, scores._2 + 1)
+
+  val WIN = 2
+
+  def newWord() = {
+    val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
+    val ew = Words.findWords(words, "fr", "en").map(_.head)
+
+    ew.map { w =>
+      word = Some(w)
+      push(Json.toJson(w))
     }
-    push(Json.toJson(this))
+  }
+
+  def checkAnswer(requestId: Long, ans: String) = {
+    play.Logger.info("Checking answer: " + ans)
+    word.map { w =>
+      play.Logger.info(s"Checking $ans VS $w")
+      if(ans == w.trad) {
+
+        if(requestId == player1._1) scores = (scores._1 + 1, scores._2)
+        if(requestId == player2._1) scores = (scores._1, scores._2 + 1)
+
+        scores match {
+          case (`WIN`, _) =>
+            player1._2.push(Json.obj("win" -> this))
+            player2._2.push(Json.obj("lose" -> this))
+          case (_, `WIN`) =>
+            player2._2.push(Json.obj("win" -> this))
+            player1._2.push(Json.obj("lose" -> this))
+          case _ =>
+            push(Json.obj("score" -> this))
+            newWord()
+        }
+      }
+    }.getOrElse{
+      play.Logger.info("No card YET")
+    }
   }
 
 }
@@ -77,11 +107,6 @@ class Events extends Actor {
       r.player1._1 == requestid || r.player2._1 == requestid
     }
 
-  def newWord = {
-    val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
-    Words.findWords(words, "fr", "en").map(_.head)
-  }
-
   def receive = {
 
     case Join(requestid) => {
@@ -99,10 +124,7 @@ class Events extends Actor {
 
            play.Logger.info(s"Starting room $room")
            room.push(Json.obj("start" -> room))
-
-           newWord.map { w =>
-             room.word = Some(w)
-             room.push(Json.toJson(w)) }
+           room.newWord()
         }
       }
       sender ! Connected(e)
