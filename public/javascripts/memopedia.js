@@ -5,55 +5,6 @@
 
 // Load the application once the DOM is ready, using `jQuery.ready`:
 
-/*
-$(function(){
-
-  var onGame = function(room){
-    console.warn("TODO onGame: %o", room)
-  }
-
-  // w: String
-  sendAnswer = function(answer) {
-    w.send(JSON.stringify({word: answer}));
-  }
-
-  // Called when somebody gave an answer
-  var onScore = function(score) {
-    console.warn("TODO onScore: %o", score)
-  }
-
-  var onCard = function(card) {
-    console.warn("TODO onCard: %o", card)
-  }
-
-  // Called when the other player has quitted the room
-  var onQuit = function() {
-    console.warn("TODO onQuit")
-  }
-
-  var onLose = function(room){
-    console.warn("TODO onLose: %o", room)
-  }
-
-  var onWin = function(room){
-    console.warn("TODO onWin: %o", room)
-  }
-
-  var w = new WebSocket("ws://" + window.location.host + "/events");
-  w.onmessage = function(e) {
-    console.log('received %o', e);
-    var m = JSON.parse(e.data);
-
-    if(m.start) onGame(m.start)
-    if(m.score) onScore(m.score)
-    if(m.word) onCard(m)
-    if(m.close) onQuit()
-    if(m.win) onWin(m.win)
-    if(m.lose) onLose(m.lose)
-  };
-})
-*/
-
 $(function () {
 
     var template = function (id, data) {
@@ -107,12 +58,11 @@ $(function () {
 
         // The DOM events specific to an item.
         events:{
-            "input input":"checkAnswer"
+            "submit #answerSubmit":"sendAnswer"
         },
 
         initialize:function () {
             console.log("Question View init")
-            setTimeout(this.nextEvent, 1000 * 30);
         },
 
         // Re-render the titles of the todo item.
@@ -122,11 +72,15 @@ $(function () {
             return this;
         },
 
-        checkAnswer: function(){
-            this.$el.find('input').val()
+        sendAnswer: function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('sendAsnwer', this.$el.find('#answer').val())
+            this.options.sendAnswer(this.$el.find('#answer').val());
+            return false;
         },
 
-        nextEvent:function () {
+        nextEvent:function (e) {
             e.preventDefault();
             e.stopPropagation();
             console.log("nextEvent Question")
@@ -194,6 +148,93 @@ $(function () {
             });
         }
 
+    });
+
+    AppViewBattle = Backbone.View.extend({
+        // Instead of generating a new element, bind to the existing skeleton of
+        // the App already present in the HTML.
+        el:$(".battlezone"),
+
+        // Our template for the line of statistics at the bottom of the app.
+        //statsTemplate: _.template($('#stats-template').html()),
+
+        // Delegated events for creating new items, and clearing completed ones.
+        events:{
+            //"keypress #new-todo":  "createOnEnter",
+            //"click #clear-completed": "clearCompleted",
+            //"click #toggle-all": "toggleAllComplete"
+        },
+
+        // At initialization we bind to the relevant events on the `Todos`
+        // collection, when items are added or changed. Kick things off by
+        // loading any preexisting todos that might be saved in *localStorage*.
+        initialize:function () {
+            var self = this;
+            console.log("init")
+            this.websocket = new WebSocket("ws://" + window.location.host + "/events");
+            this.websocket.onmessage = function(e) {
+                console.log('received %o', e);
+                var m = JSON.parse(e.data);
+
+                if(m.start) self.onGameStart(m.start)
+                if(m.score) self.onScore(m.score)
+                if(m.word) self.onCard(m)
+                if(m.close) self.onQuit()
+                if(m.win) self.onWin(m.win)
+                if(m.lose) self.onLose(m.lose)
+            };
+        },
+
+        // Re-rendering the App just means refreshing the statistics -- the rest
+        // of the app doesn't change.
+        render: function () {
+            console.log("render");
+        },
+
+        onGameStart: function (room) {
+            console.warn("TODO onGame: %o", room)
+        },
+        // w: String
+        sendAnswer: function (answer) {
+            console.log(this)
+            this.websocket.send(JSON.stringify({word: answer}));
+        },
+
+        // Called when somebody gave an answer
+        onScore: function (score) {
+            console.warn("TODO onScore: %o", score)
+            $('.score').replaceWith("<h1>Player1 : "+score.player1.score+" - Player2 : "+score.player2.score+"</h1>")
+        },
+
+        onCard: function (card) {
+            var self = this;
+            console.log(this)
+            console.warn("TODO onCard: %o", card)
+            var cardView = new Question({
+                model: card,
+                sendAnswer : function(answer) {
+                    self.sendAnswer(answer)
+                }
+            });
+            console.log(this.$el)
+            console.log(cardView.render().$el)
+            this.$el.replaceWith(cardView.render().$el);
+        },
+
+        // Called when the other player has quitted the room
+        onQuit: function () {
+            console.warn("TODO onQuit")
+        },
+
+        onLose: function (room) {
+            console.warn("TODO onLose: %o", room)
+            this.$el.replaceWith('<img src="/assets/images/lose.gif"/>');
+        },
+
+        onWin: function (room) {
+            console.warn("TODO onWin: %o", room)
+            this.$el.replaceWith('<img src="/assets/images/win.gif"/>');
+        }
     });
 
 

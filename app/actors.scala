@@ -36,9 +36,9 @@ case class Room(player1: (Long, Concurrent.Channel[JsValue]), player2: (Long, Co
 
   val WIN = 2
 
-  def newWord() = {
     val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
     val ew = Words.findWords(words, "fr", "en").map(_.head)
+  def newWord() = {
 
     ew.map { w =>
       word = Some(w)

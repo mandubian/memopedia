@@ -43,8 +43,10 @@
 
                       <div class="desc">
                           <h2>{{word}}</h2>
-
-                          <input type=text>
+                          <form id="answerSubmit">
+                              <input type= text id="answer">
+                              <input type="submit" value="valider">
+                          </form>
                       </div>
                   </article>
               </section>
@@ -58,6 +60,7 @@
       <a href="/"><img src="/assets/images/lougou-choulou.png" lat="" /></a>
     </header>
     <div id="content">
+        @content
     </div>
     <footer>
       <p>I am Donald Trump and I approve Memopedia.</p>

@@ -1,10 +1,15 @@
 @(langFrom: String, langTo: String)
 
-@main("Memopedia - LEARN ALL THE THINGS", langFrom, langTo) {
-    <h1>Battle</h1>
-
-
+@script = {
     <script type="text/javascript">
-
+    $(function(){
+        var App = new AppViewBattle();
+    });
     </script>
+}
+
+@main("Memopedia - LEARN ALL THE THINGS", langFrom, langTo, script) {
+    <h1 class="score">Fight!!</h1>
+    <div class="battlezone">
+    </div>
 }
