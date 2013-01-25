@@ -203,7 +203,7 @@ $(function () {
         // Called when somebody gave an answer
         onScore: function (score) {
             console.warn("TODO onScore: %o", score)
-            $('.score').replaceWith("<h1>Player1 : "+score.player1.score+" - Player2 : "+score.player2.score+"</h1>")
+            $('.score').text("Player1 : " + score.player1.score + " - Player2 : " + score.player2.score)
         },
 
         onCard: function (card) {
@@ -228,11 +228,13 @@ $(function () {
 
         onLose: function (room) {
             console.warn("TODO onLose: %o", room)
+            $('.score').text('YOU LOSE :(')
             this.$el.html('<img src="/assets/images/lose.gif"/>');
         },
 
         onWin: function (room) {
             console.warn("TODO onWin: %o", room)
+            $('.score').text("YOU WIN! :)")
             this.$el.html('<img src="/assets/images/win.gif"/>');
         }
     });
