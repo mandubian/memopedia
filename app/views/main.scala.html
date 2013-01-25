@@ -53,6 +53,17 @@
               <video controls="" autoplay="" name="media"><source src="{{speech}}" type="audio/mpeg"></video>
           </div>
       </script>
+      <script type="text/javascript" charset="utf-8">
+        $(function(){
+          console.log('Start')
+          var w = new WebSocket("ws://" + window.location.host + "/events");
+          w.onmessage = function(e) {
+            console.log('received %o', e);
+            var m = JSON.parse(e.data);
+            console.log(m);
+          };
+        })
+      </script>
   </head>
   <body>
     <header>

@@ -10,7 +10,6 @@ import utils._
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
-
   def index(lang: String = "en") = Action {
     Ok(views.html.index(lang))
   }
