@@ -36,11 +36,13 @@ case class Room(player1: (Long, Concurrent.Channel[JsValue]), player2: (Long, Co
 
   val WIN = 2
 
-    val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
-    val ew = Words.findWords(words, "fr", "en").map(_.head)
+  val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
+  val ew = Words.findWords(words, "fr", "en")
+  val random = new scala.util.Random(1)
   def newWord() = {
 
-    ew.map { w =>
+    ew.map { ws =>
+      val w = ws.apply(random.nextInt(ws.size))
       word = Some(w)
       push(Json.toJson(w))
     }

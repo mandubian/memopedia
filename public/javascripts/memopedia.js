@@ -217,8 +217,8 @@ $(function () {
                 }
             });
             console.log(this.$el)
-            console.log(cardView.render().$el)
-            this.$el.replaceWith(cardView.render().$el);
+            console.log(cardView.render().$el.html())
+            this.$el.html(cardView.render().$el);
         },
 
         // Called when the other player has quitted the room
@@ -228,12 +228,12 @@ $(function () {
 
         onLose: function (room) {
             console.warn("TODO onLose: %o", room)
-            this.$el.replaceWith('<img src="/assets/images/lose.gif"/>');
+            this.$el.html('<img src="/assets/images/lose.gif"/>');
         },
 
         onWin: function (room) {
             console.warn("TODO onWin: %o", room)
-            this.$el.replaceWith('<img src="/assets/images/win.gif"/>');
+            this.$el.html('<img src="/assets/images/win.gif"/>');
         }
     });
 
