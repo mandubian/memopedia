@@ -15,21 +15,14 @@ object Words {
 
   def findWords(words: List[String], lang: String = "fr") : Future[List[Word]] = {
     val all = words.map { wordStr =>
-        //println(wordStr)
+
         val rdy : List[Future[String]] = List(
-
-
-          GoogleTranslator.find(lang, wordStr)
-          ,
-
-          Wikipedia.find("fr", wordStr).flatMap { article =>
-            Wikipedia.findImage("fr", (article \ "title").as[String]).map(_.as[String])
-          },
-
-          GoogleTranslator.find(lang, wordStr).map {
-            GoogleTranslator.textToSpeech(lang, _)
-          }
-          )
+            GoogleTranslator.find(lang, wordStr),
+            Wikipedia.find("fr", wordStr).flatMap { article =>
+              Wikipedia.findImage("fr", (article \ "title").as[String]).map(_.as[String])
+            },
+            GoogleTranslator.find(lang, wordStr).map(GoogleTranslator.textToSpeech(lang, _))
+        )
 
         Future.sequence(rdy).map { res =>
           Word(wordStr, res(0), res(1), res(2))

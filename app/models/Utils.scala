@@ -14,9 +14,10 @@ object GoogleTranslator {
     val GOOGLEKEY = "AIzaSyCPTBRnI4eauBgUvFcNdbr_z3-9IcTUzyc"
     WS.url(
       s"https://www.googleapis.com/language/translate/v2?key=$GOOGLEKEY&target=$lang&q=$word"
-    ).get().map( first =>
-      ((first.json \ "data" \ "translations").as[JsArray].apply(0) \ "translatedText").as[String]
-      )
+    ).get().map{ response =>
+      if(response.status != 200) throw new RuntimeException(response.json.toString)
+      ((response.json \ "data" \ "translations").as[JsArray].apply(0) \ "translatedText").as[String]
+    }
   }
 
   def textToSpeech(lang: String, word: String): String = {
