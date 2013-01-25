@@ -18,8 +18,8 @@ object Words {
 
         val rdy : List[Future[String]] = List(
             WordReference.find(wordStr, langFrom, langTo),
-            Wikipedia.find(langTo, wordStr).flatMap { article =>
-              Wikipedia.findImage(langTo, (article \ "title").as[String]).map(_.as[String])
+            Wikipedia.find(langFrom, wordStr).flatMap { article =>
+              Wikipedia.findImage(langFrom, (article \ "title").as[String]).map(_.as[String])
             }
         )
 
