@@ -4,6 +4,56 @@
 // to persist Backbone models within your browser.
 
 // Load the application once the DOM is ready, using `jQuery.ready`:
+
+/*
+$(function(){
+
+  var onGame = function(room){
+    console.warn("TODO onGame: %o", room)
+  }
+
+  // w: String
+  sendAnswer = function(answer) {
+    w.send(JSON.stringify({word: answer}));
+  }
+
+  // Called when somebody gave an answer
+  var onScore = function(score) {
+    console.warn("TODO onScore: %o", score)
+  }
+
+  var onCard = function(card) {
+    console.warn("TODO onCard: %o", card)
+  }
+
+  // Called when the other player has quitted the room
+  var onQuit = function() {
+    console.warn("TODO onQuit")
+  }
+
+  var onLose = function(room){
+    console.warn("TODO onLose: %o", room)
+  }
+
+  var onWin = function(room){
+    console.warn("TODO onWin: %o", room)
+  }
+
+  var w = new WebSocket("ws://" + window.location.host + "/events");
+  w.onmessage = function(e) {
+    console.log('received %o', e);
+    var m = JSON.parse(e.data);
+
+    if(m.start) onGame(m.start)
+    if(m.score) onScore(m.score)
+    if(m.word) onCard(m)
+    if(m.close) onQuit()
+    if(m.win) onWin(m.win)
+    if(m.lose) onLose(m.lose)
+  };
+})
+*/
+
 $(function () {
 
     var template = function (id, data) {
