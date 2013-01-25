@@ -40,8 +40,9 @@ $(function () {
             e.preventDefault();
             e.stopPropagation();
             console.log(e);
-            console.log("nextEvent")
+            console.log("nextEvent card")
             this.options.next();
+            return false;
         }
 
     });
@@ -60,7 +61,7 @@ $(function () {
         },
 
         initialize:function () {
-            console.log("CardView init")
+            console.log("Question View init")
             setTimeout(this.nextEvent, 1000 * 30);
         },
 
@@ -76,9 +77,11 @@ $(function () {
         },
 
         nextEvent:function () {
-            console.log("nextEvent")
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("nextEvent Question")
             this.options.next();
-
+            return false;
         }
 
     });
@@ -86,7 +89,7 @@ $(function () {
     // ---------------
 
     // Our overall **AppView** is the top-level piece of UI.
-    var AppView = Backbone.View.extend({
+    AppView = Backbone.View.extend({
 
         // Instead of generating a new element, bind to the existing skeleton of
         // the App already present in the HTML.
@@ -134,21 +137,14 @@ $(function () {
             this.modelIndex++;
             this.$el.append(cardView.render().$el.hide());
             this.currentView.$el.fadeOut(function () {
-                cardView.$el.fadeIn(function () {
-                    self.currentView.remove();
-                    self.currentView = cardView;
-                });
+            });
+            cardView.$el.fadeIn(function () {
+                self.currentView.remove();
+                self.currentView = cardView;
             });
         }
 
     });
-
-    $.ajax({
-        url:'/randomWords?lang='+lang
-    }).done(function (data) {
-            console.log(data);
-            var App = new AppView({model:data});
-        });
 
 
 });

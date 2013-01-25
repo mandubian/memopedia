@@ -1,6 +1,17 @@
-@(lang: String)
+@(langFrom: String, langTo: String)
 
-@main("Memopedia - LEARN ALL THE THINGS ", lang) {
+@script = {
+    <script type="text/javascript">
+        $.ajax({
+            url:"@routes.Application.randomWords()"
+        }).done(function (data) {
+        console.log(data);
+        var App = new AppView({model:data});
+        });
+    </script>
+}
+
+@main("Memopedia - LEARN ALL THE THINGS ", langFrom, langTo, script) {
   <nav>
     <a href="#">☞</a>
   </nav>

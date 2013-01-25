@@ -10,8 +10,12 @@ import utils._
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
-  def index(lang: String = "en") = Action {
-    Ok(views.html.index(lang))
+  def index(langFrom: String = "fr", langTo: String = "en") = Action {
+    Ok(views.html.index(langFrom, langTo))
+  }
+
+  def battle(langFrom: String = "fr", langTo: String = "en") = Action {
+    Ok(views.html.battle(langFrom, langTo))
   }
 
   def randomWords(langFrom: String = "fr", langTo: String = "en") = Action { implicit request =>

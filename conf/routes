@@ -4,13 +4,15 @@
 
 # Home page
 GET     /                                   controllers.Application.index(lang: String ?= "en")
+GET     /battle                             controllers.Application.battle(langFrom = "fr", langTo = "en")
+
 GET     /translate/:word/:lang              controllers.Application.translate(lang: String, word: String)
 GET     /tts/:lang/:word                    controllers.Application.tts(lang: String, word: String)
 GET     /wikipedia/:lang/:word              controllers.Application.searchWikipediaPage(lang: String, word: String)
 GET     /wikipedia/:lang/:title/images      controllers.Application.searchWikipediaImages(lang: String, title: String)
 GET     /wiktionary/:lang/:word             controllers.Application.searchWiktionaryPage(lang: String, word: String)
 
-GET     /randomWords                controllers.Application.randomWords(langFrom = "fr", langTo = "en")
+GET     /randomWords                        controllers.Application.randomWords(langFrom = "fr", langTo = "en")
 
 
 #websocket

@@ -46,6 +46,7 @@ object WordReference {
 object Wikipedia {
   def find(lang: String, word: String): Future[JsValue] = {
     val url = s"""http://$lang.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch=${URLEncoder.encode(word, "UTF-8")}"""
+    println(url)
     WS.url(url)
     .get().map{ resp =>
       if(resp.status != 200) throw new RuntimeException(resp.body)
@@ -54,11 +55,13 @@ object Wikipedia {
   }
 
   def findImage(lang: String, title: String): Future[JsValue] = {
+    println( s"""http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=${URLEncoder.encode(title, "UTF-8")}&prop=images""")
     WS.url(
       s"""http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=${URLEncoder.encode(title, "UTF-8")}&prop=images"""
     ).get().flatMap{ resp =>
       val obj = (resp.json \ "query" \ "pages").as[JsObject]
       val img = URLEncoder.encode((obj.fields(0)._2.as[JsObject] \ "images" \\ "title")(0).as[String], "UTF-8")
+      println(s"http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=$img&prop=imageinfo&iiprop=url")
       WS.url(
         s"http://$lang.wikipedia.org/w/api.php?format=json&action=query&titles=$img&prop=imageinfo&iiprop=url"
         ).get().map { resp =>
