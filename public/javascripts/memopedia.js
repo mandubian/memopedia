@@ -228,13 +228,13 @@ $(function () {
 
         onLose: function (room) {
             console.warn("TODO onLose: %o", room)
-            $('.score').text('YOU LOSE :(')
+            $('.score').text('TU PUS :(')
             this.$el.html('<img src="/assets/images/lose.gif"/>');
         },
 
         onWin: function (room) {
             console.warn("TODO onWin: %o", room)
-            $('.score').text("YOU WIN! :)")
+            $('.score').text("T'ES UN WINNER! :)")
             this.$el.html('<img src="/assets/images/win.gif"/>');
         }
     });
