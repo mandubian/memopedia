@@ -41,6 +41,7 @@ case class Room(player1: (Long, Concurrent.Channel[JsValue]), player2: (Long, Co
     }
     push(Json.toJson(this))
   }
+
 }
 object Room {
   def apply(p1: (Long, Concurrent.Channel[JsValue]), p2: (Long, Concurrent.Channel[JsValue])) = new Room(p1, p2, (0,0))
@@ -71,6 +72,10 @@ class Events extends Actor {
 
   var pending: Option[(Long, Concurrent.Channel[JsValue])] = None
   val rooms = new scala.collection.mutable.ArrayBuffer[Room]
+
+  private def findRoom(requestid: Long) = rooms.find{ r =>
+      r.player1._1 == requestid || r.player2._1 == requestid
+    }
 
   def newWord = {
     val words = "ordinateur" :: "carte" :: "avion" :: Nil // :: "bottes" :: "culturisme" :: "pince" :: "loutre" :: "choucroute" :: "abeille" :: "cravate" :: Nil
@@ -104,18 +109,17 @@ class Events extends Actor {
     }
 
     case Answer(requestid, ans) => {
-      println("ROOMS: " + rooms)
-      rooms
-        .find{ r =>
-          println(requestid)
-          println(r)
-          r.player1._1 == requestid || r.player2._1 == requestid
-        }
-        .map(_.checkAnswer(requestid, ans))
+      play.Logger.info(s"$requestid answered: $ans")
+      findRoom(requestid).map(_.checkAnswer(requestid, ans))
     }
 
     case Quit(requestid) => {
-      //TODO
+      play.Logger.info(s"$requestid has quit")
+      findRoom(requestid).map { r =>
+        r.push(Json.obj("close" -> "close"))
+        rooms - r
+        play.Logger.info(s"$r closed")
+      }
     }
   }
 }
