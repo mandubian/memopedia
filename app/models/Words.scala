@@ -13,19 +13,18 @@ object Words {
   implicit val wordsFormat = Json.format[Word]
 
 
-  def findWords(words: List[String], lang: String = "fr") : Future[List[Word]] = {
+  def findWords(words: List[String], langFrom: String, langTo: String) : Future[List[Word]] = {
     val all = words.map { wordStr =>
 
         val rdy : List[Future[String]] = List(
-            GoogleTranslator.find(lang, wordStr),
-            Wikipedia.find("fr", wordStr).flatMap { article =>
-              Wikipedia.findImage("fr", (article \ "title").as[String]).map(_.as[String])
-            },
-            GoogleTranslator.find(lang, wordStr).map(GoogleTranslator.textToSpeech(lang, _))
+            WordReference.find(wordStr, langFrom, langTo),
+            Wikipedia.find(langTo, wordStr).flatMap { article =>
+              Wikipedia.findImage(langTo, (article \ "title").as[String]).map(_.as[String])
+            }
         )
 
         Future.sequence(rdy).map { res =>
-          Word(wordStr, res(0), res(1), res(2))
+          Word(wordStr, res(0), res(1))
         }
       }
       Future.sequence(all)
